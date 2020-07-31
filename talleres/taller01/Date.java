@@ -1,19 +1,19 @@
 public class Date {
-  private int day;
-  private int m; //Month
-  private int year;
-  public Date(int day, int m, int year){
+  private byte day;
+  private byte m; //Month
+  private short year;
+  public Date(byte day, byte m, short year){
     this.day = day;
     this.m = m;
     this.year = year;
   }
-  public int getDay(){
+  public byte getDay(){
     return day;
   }
-  public int getM(){
+  public byte getM(){
     return m;
   }
-  public int getYear(){
+  public short getYear(){
     return year;
   }
   public String getDate (Date d){
