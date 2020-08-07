@@ -3,7 +3,7 @@
 *a 3 problemas recursivos
 *
 *@autor Mauricio Toro, Camilo Paez(Plantilla), Jose Manuel Fonseca y Santiago Puerta.
-*@version 1
+*@version 2
 */
 
 public class Taller2 {
