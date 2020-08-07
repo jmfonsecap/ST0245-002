@@ -1,4 +1,4 @@
-class Main {
+public class Taller {
 
   public static void combinations(String s){
     combinationsAux("",s);
