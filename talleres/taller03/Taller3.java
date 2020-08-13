@@ -1,34 +1,30 @@
 public class Taller3 {
 
-	/**
-	*
-	* El método torresDeHannoi es un auxiliar del proceso 
-	* @param n numero de discos
-	* 
-	*/	
+	  public static void torresDeHannoi(int n){
+    		torresDeHannoiAux(n,1,2,3);
+  	   }
+  	  private static void torresDeHannoiAux(int n, int origen, int intermedio, int destino){
+    		if (n == 1){
+      			System.out.println ("Disk 1 from" + origen + "to" + destino);
+    		         }
+    	   else {
+      		torresDeHannoiAux(n -1, origen, destino, intermedio);
+      		System.out.println ("Disk" + n + " from " + origen + "to" + destino);
+      		torresDeHannoiAux (n-1, intermedio, origen, destino);
+            }
+  	}
 	
-	public static void torresDeHannoi(int n) {
-		torresDeHannoiAux(n, 1, 2, 3);
-	}
-
-	/**
-	*
-	* El método torresDeHannoi es un auxiliar del proceso 
-	* @param n numero de discos
-	* @param origen la torre número uno donde se posicionan todos los discos inicialmente
-	* @param destino la torre donde deben posicionarse todos los discos terminado el proceso
-	* @param intermedio torre auxiliar para que el cambio de torres se haga efectivo
-	* 
-	* debe devolver la secuencia de pasos en consola de esta manera:
-	* System.out.println("Disk "+ n + " from "+ origen + " to "+ destino);
-	*
-	* @see <a href="http://www.uterra.com/juegos/torre_hanoi.php"> Simulación del funcionamiento</a>
-	* @see <a href="https://es.wikipedia.org/wiki/Torres_de_Han%C3%B3i"> Un poco de historia </a>
-	*/	
 	
-	private static void torresDeHannoiAux(int n, int origen, int intermedio, int destino) {
-		//...
-	}
+	public static void combinations(String s){
+    		combinationsAux ("",s);
+ 	}
+  	private static void combinationsAux (String prefix, String s){
+    		if (s.length()>0){
+      			System.out.println (prefix + s.charAt(0));
+      			combinationsAux(prefix + s.charAt(0), s.substring(1));
+      			combinationsAux (prefix, s.substring(1));
+    		}
+ 	}
 		
 
 		
