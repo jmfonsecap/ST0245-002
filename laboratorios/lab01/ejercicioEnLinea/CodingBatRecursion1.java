@@ -93,5 +93,28 @@ public class CodingBatRecursion1 {
           return endX(str.substring(1))+"x";
         }
         return str.substring(0,1)+endX(str.substring(1));
-    }   
+    }
+    public int powerN(int base, int n) {
+        if (n == 0){
+         return 1;
+        } else {
+        return base*powerN(base,n-1);
+        }
+    }
+    public int factorial(int n) {
+        if (n==1){
+            return 1;
+        } else{
+            return n* factorial (n-1);
+        }
+    }
+    public int bunnyEars(int n) {
+        if (n==0){
+            return 0;
+        } else {
+            return 2 + bunnyEars(n-1);
+         }   
+    }
+
 }
+    
