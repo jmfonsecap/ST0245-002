@@ -11,7 +11,7 @@ public class Taller5 {
     public static void insertionSort(int[] array)
     {
         for(int i =0;i<array.length;i++)
-            for(int j=i;j>0;j--)
+            for(int j=i;j>0;j--) 
             {
                 if(array[j]<array[j-1])
                 {
@@ -21,17 +21,29 @@ public class Taller5 {
                 }
                 else{ break;}
             }    
+        //O(n^2)
     }
 
     public static int suma(int[] array)
     {
-        int suma =0;
-        for(int i=0;i<array.length;i++)
+        int suma =0; //c1
+        for(int i=0;i<array.length;i++) //c2 + c3n
         {
-            suma+= array[i];
+            suma+= array[i]; //c4*n
         }
-        return suma;
+        return suma; //c5
+        //T(n) = c1 + c2 + c3n +c4n +c5 es O(n)
     }
+    
+    public static void tablas(int n){
+        for  (int i= 1; i<=n; i++){ //c1 3 
+            for (int j= 1; j<=n; j++){ //c2 3
+                                  //c1n + c2n + T(n)
+                                  //O (n^2)
+        String s = (i+" x "+j+ " = "+(i*j));
+            }
+        }
+     } 
 
     public static void main(String[] args) {
         int[] array= {20,5,3,100,12,78,1,9,0};
