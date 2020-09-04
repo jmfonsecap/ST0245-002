@@ -60,6 +60,36 @@ public class CodingBatArray3 {
         }
         return false;
     }
+  
+    public int[] seriesUp(int n) {
+      int[] array= new int[(n*(n+1)/2)];
+      int x=0;
+      for(int i=1;i<=n;i++)
+      {
+        
+        for(int j=1;j<=i;j++)
+        {
+          array[x++]= j;
+          
+        }
+      }
+      return array;
+    }
+
+    public int[] squareUp(int n) {
+      int[] result = new int[n * n];
+      int pass = 1, index = 0;
+      if(n == 0) { return result; }
+      for(int i = n-1; i < result.length; i+=n) {
+         index = i;
+         for(int k = 1; k <= pass; k++) {
+           result[index] = k;
+           index--;
+         }
+         pass++;
+      }
+      return result;
+    }
 
 
       
