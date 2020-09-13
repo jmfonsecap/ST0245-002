@@ -43,6 +43,7 @@ class SinglyLinkedListImpl {
         size = 0;
     }
 
+    //La complejidad de agregar n abejas es de O(n)
     public void insertAtStart(int data) {
         Node nptr = new Node(data, null);
         if (start == null) {
