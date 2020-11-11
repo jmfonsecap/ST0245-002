@@ -2,10 +2,11 @@ import java.util.*;
 import java.lang.*; 
 import java.io.*; 
   
+
 class Bipartite 
 { 
-    final static int V = 4; // No. of Vertices 
-  
+    final static int V = 4; 
+    //Point 2.1 
 
     boolean isBipartite(int G[][],int src) 
     { 
