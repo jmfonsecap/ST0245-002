@@ -1,6 +1,10 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.io.*;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class CodigoPProyecto{
@@ -50,11 +54,33 @@ public class CodigoPProyecto{
 
     public static void main(final String[] args) throws IOException
     {
+      CodigoPProyecto CPP = new CodigoPProyecto(CodigoPProyecto.leerDatos());   
+      Queue<Integer> estudiantes= new LinkedList<Integer>();
+      Bosque pepe = new Bosque();
+      Arbol pepe2 = new Arbol();
       
-      CodigoPProyecto CPP = new CodigoPProyecto(CodigoPProyecto.leerDatos());
-        
-      System.out.println(CPP.getMatrix()[3][13]);
-      Gini menorGini= Gini.calcularImpurezaM(matrix);
-      System.out.println("La menor impureza es: "+menorGini.getImpureza()+" en la variable "+matrix[0][menorGini.getPosVariable()]+ " con la condición "+menorGini.getCondicion());
+      Node[] a = pepe.crearBosque(matrix);
+      CodigoPProyecto.leerDatos();
+      int acertado=0;
+      for(int i = 1;i<matrix.length;i++)
+      {
+         if(pepe.revisarBosque(a, matrix[i]))
+         {
+            if(matrix[i][matrix[0].length-1].equals("1"))
+            {
+               acertado++;
+            }
+            
+         }
+         else
+         {
+            if(matrix[i][matrix[0].length-1].equals("0"))
+            {
+               acertado++;
+            }
+            
+         }
+      }
+      System.out.println(acertado);    
     }
 }
