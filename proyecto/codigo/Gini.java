@@ -9,10 +9,12 @@ public class Gini {
     String condicion;
     double impureza;
     
-    public Gini()
-    {
-
-    }
+    /**
+     * Constructor Gini
+     * @param posVariable Posicion en donde se encuentra la variable con la que se evalua dicho gini.
+     * @param condicion La condicion con la que se evalua dicho gini.
+     * @param impureza Impureza de el gini calculado
+     */
     public Gini(int posVariable,String condicion, double impureza)
     {
         this.posVariable=posVariable;
@@ -20,21 +22,46 @@ public class Gini {
         this.impureza=impureza;
         
     }
+    /**
+     * Getter de Impureza
+     * @return impureza del gini
+     */
     public double getImpureza() {
         return impureza;
     }
+    /**
+     * Getter de la condicion
+     * @return condicion con la que se cumple dicho gini.
+     */
     public String getCondicion() {
         return condicion;
     }
+    /**
+     * Getter de la poscion de la variable
+     * @return columna que se evaluo para ese gini.
+     */
     public int getPosVariable() {
         return posVariable;
     }
+    /**
+     * Metodo que se encarga de decir que estudiantes irian a la izquierda y a la derecha y basandose en eso saca
+     * una impureza de gini para todas las posibles condiciones en la columna especificada. Busca retornar el menor gini
+     * entre todas las impurezas posibles.
+     * @param matrix Matriz que se ha evaluado durante todo el programa, en donde se encuentran los datos de los multiples
+     * estudiantes.
+     * @param posicion Posicion de la columna que se evaluara para izquierda y derecha.
+     * @param valores  Un TreeSet que contiene todas las posibles condiciones que puede tener una columna.
+     * @param estudiantes Una cola de estudiantes a evaluar, ya que como es arboles no se evaluan todos.
+     * @return el menor gini posible.
+     */
     public static Pairs<String,Double> IzquierdaDerecha(String[][] matrix, int posicion,TreeSet<String> valores,Queue<Integer> estudiantes)
     {
+        //Conjunto de posiciones donde las condicones son númericas pero no cuantitativas.
         final int[] stringsNo = {14,23,63};
         Pairs<String,Double> impurezaPA = new Pairs<String,Double>("nada",(double)300);
         
         Queue<Integer> q = new LinkedList<Integer>(estudiantes);
+        //Evalua == si son condiciones cualitativas
         if(!isNumeric(matrix[1][posicion])||Double.parseDouble(matrix[1][posicion])>300||falsoInt(stringsNo,posicion))
         {
             Hashtable<String,Double> buenos = new Hashtable<String,Double>();
@@ -88,6 +115,7 @@ public class Gini {
         
 
         }
+        //Evalua <= si son condiciones cuantitativas.
         else {
             
             Pair[] unsortedArray = new Pair[q.size()];
@@ -179,6 +207,13 @@ public class Gini {
 
         return impurezaPA; 
     }
+    /**
+     * Busca la menor impureza entre todas las posibles columnas y condiciones.
+     * @param matrix matriz con todos los estudiantes y sus datos
+     * @param estudiantes datos que se le pasa por parte de el bosque o por la division de nodos para solo evaluar
+     * los que son pertinentes y no todos.
+     * @return el menor gini  entre todas las columnas y condiciones.
+     */
     public static Gini calcularImpurezaM(String[][] matrix, Queue<Integer> estudiantes)
     {
         Gini impurezaMenor= new Gini(0,"",300);
@@ -200,6 +235,13 @@ public class Gini {
         
         return impurezaMenor;
     }
+    /**
+     * Encuentra el conjunto de condiciones para cada columna y los agrupa.
+     * @param matrix matriz con todos los estudiantes y sus datos.
+     * @param estudiantes datos que se le pasa por parte de el bosque o por la division de nodos para solo evaluar
+     * los que son pertinentes y no todos.
+     * @return un ArrayList que contiene parejas de la posicion de columna en donde estan las condiciones.
+     */
     public static ArrayList<Pairs<Integer,TreeSet<String>>> conjuntoDeValores(String[][] matrix,Queue<Integer> estudiantes)
     {
         ArrayList<Pairs<Integer,TreeSet<String>>> valores = new ArrayList<Pairs<Integer,TreeSet<String>>>();
@@ -220,14 +262,18 @@ public class Gini {
         
         return valores;
     }
-
+    /**
+     * Revisa si un string es númerico o no
+     * @param strNum string que se evaluara para saber si es un número o no.
+     * @return un boolean mostrando si la condicion se cumple o no.
+     */
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
         }
         else{
             try {
-                double d = Double.parseDouble(strNum);
+                Double.parseDouble(strNum);
             } catch (NumberFormatException nfe) {
                 return false;
             }
@@ -235,6 +281,13 @@ public class Gini {
         }
         
     }
+    /**
+     * Determina si en un conjunto que se pasa de posiciones, la posicion enviada es un conjunto númerico mas no
+     * cuantitativo
+     * @param prueba conjunto de posiciones que se sabe que son númericas mas no cuantitativas
+     * @param posicion posición que se quiere ver si cumple con las condiciones o si es númerica cuantitativa.
+     * @return
+     */
     public static boolean falsoInt(int[] prueba, int posicion)
     {
         for(int i =0;i<prueba.length;i++){

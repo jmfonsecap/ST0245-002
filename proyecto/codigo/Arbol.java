@@ -1,15 +1,18 @@
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
-import java.util.Stack;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 public class Arbol {
     static int preIndex = 0; 
+
+    /**
+     * Se encarga de decir cuales estudiantes son los estudiantes que cumplen con la condicion del nodo del arbol
+     * para asi mandarlos al lado derecho de ese nodo.
+     * @param matrix matriz con todos los estudiantes y sus datos.
+     * @param gini contiene la posicion de la varibale y la condicion para asi determinar si el estudiante cumple o no
+     * @param estudiantes2 Es una cola de posiciones para los estudiantes que ya fueron separados previamente o fueron
+     * enviados por el bosque
+     * @return retorna una nueva cola de estudiantes que nos dice cuales estan a cierto lado de el nodo
+     */
     public Queue<Integer> separarMatrizDerecha(String[][] matrix, Gini gini, Queue<Integer> estudiantes2)
     {
         Queue<Integer> estudiantes= new LinkedList<Integer>();
@@ -47,6 +50,15 @@ public class Arbol {
         return estudiantes;
         
     }
+    /**
+     * Hace el mismo trabajo que separarMatrizDerecha pero este es para el caso en el que no se cumple para así
+     * mandarlos a la izquierda
+     * @param matrix matriz con todos los estudiantes y sus datos.
+     * @param gini contiene la posicion de la varibale y la condicion para asi determinar si el estudiante cumple o no
+     * @param estudiantes2 Es una cola de posiciones para los estudiantes que ya fueron separados previamente o fueron
+     * enviados por el bosque
+     * @return retorna una nueva cola de estudiantes que nos dice cuales estan a cierto lado de el nodo
+     */
     public Queue<Integer> separarMatrizIzquieda(String[][] matrix, Gini gini, Queue<Integer> estudiantes2)
     {
         Queue<Integer> estudiantes= new LinkedList<Integer>();
@@ -83,18 +95,37 @@ public class Arbol {
         return estudiantes;
         
     }
+
+    /**
+     * Metodo para crear un arbol de decision a partir de unos estudiantes que nos manden y una matriz de datos sobre 
+     * estos estudiantes
+     * @param matrix matriz con todos los estudiantes y sus datos.
+     * @param estudiantes Es una cola de posiciones para los estudiantes que ya fueron separados previamente o fueron
+     * enviados por el bosque
+     * @param alturaI altura de el nodo de la izquierda
+     * @param alturaD altura de el nodo de la derecha. La suma de los dos nos da la altura total del arbol
+     * @return retorna el arbol de decision ya armado.
+     */
     public Node crearArbol(String[][] matrix,Queue<Integer> estudiantes,int alturaI, int alturaD)
     {   
+        //Condicon si ya no hay estudiantes en la cola
         if(estudiantes.isEmpty())
         {
             return null;
         }
+        //crea un gini para determinar cual es la mejor condicon para dicho nodo.
         Gini determinante= Gini.calcularImpurezaM(matrix,estudiantes);
+        System.out.println("posicion "+matrix[0][determinante.getPosVariable()]+" con condicion "+determinante.getCondicion());
+        System.out.println(alturaD);
+        System.out.println(alturaI);
+        //Evita que una de las condiciones sea la ID de los estudiantes, esto evita que para un bosque, se manden
+        //varios estudiantes malos y uno bueno y ese sea la condicion que define eso.
         if(matrix[0][determinante.getPosVariable()].equals("estu_consecutivo.1"))
         {
             return null;
         }
-        if(determinante.getImpureza()==0.0||alturaD+alturaI>=5)
+        //Retorna el  nodo actual si la impureza de ese nodo ya limpio todo o si la altura de ese arbol es 4
+        if(determinante.getImpureza()==0.0||alturaD+alturaI>=4)
         {
             
             Node pepe = new Node( new Pairs<Integer,String>(determinante.getPosVariable(),determinante.getCondicion()));
@@ -113,6 +144,14 @@ public class Arbol {
         nodo.left = crearArbol(matrix, estudiantesI,alturaI+1,alturaD);
         return nodo;
     }
+
+    /**
+     * Revisa el arbol para un estudiante y determinar si dicho estudiante pasa o no segun el arbol.
+     * @param arbol el arbol de decision en el que se va a predecir si pasara las pruebas saber Pro por encima del
+     * promedio o no.
+     * @param estudiante estudiante que se le predecira si pasara por encima del promedio o no las pruebas Saber Pro
+     * @return
+     */
     public boolean revisarArbol(Node arbol,String[] estudiante)
     {
         final int[] stringsNo = {14,23,63};
@@ -206,13 +245,18 @@ public class Arbol {
             }
         }
     }
+    /**
+     * Revisa si un string es númerico o no
+     * @param strNum string que se evaluara para saber si es un número o no.
+     * @return un boolean mostrando si la condicion se cumple o no.
+     */
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
         }
         else{
             try {
-                double d = Double.parseDouble(strNum);
+                Double.parseDouble(strNum);
             } catch (NumberFormatException nfe) {
                 return false;
             }
@@ -220,6 +264,14 @@ public class Arbol {
         }
         
     }
+
+    /**
+     * Determina si en un conjunto que se pasa de posiciones, la posicion enviada es un conjunto númerico mas no
+     * cuantitativo
+     * @param prueba conjunto de posiciones que se sabe que son númericas mas no cuantitativas
+     * @param posicion posición que se quiere ver si cumple con las condiciones o si es númerica cuantitativa.
+     * @return
+     */
     public static boolean falsoInt(int[] prueba, int posicion)
     {
         for(int i =0;i<prueba.length;i++){
@@ -227,152 +279,5 @@ public class Arbol {
                 return true;
         }
         return false;
-    }
-    public static void guardarArbol(String nombre, Node arbol) throws IOException
-    {   
-        File archivo = new File(nombre);
-        BufferedWriter bw = new BufferedWriter(new FileWriter(archivo));
-        guardarArbolPreOrder(bw,arbol);
-        bw.newLine();
-        guardarArbolInOrder(bw,arbol);
-        bw.flush();
-        bw.close();
-    }
-    public static void guardarArbolPreOrder(BufferedWriter bw, Node arbol) throws IOException 
-    {
-        if(arbol!=null){
-            
-            if(arbol.right==null&&arbol.left==null)
-            {
-                bw.write(arbol.getValor().getElement0()+"|"+arbol.getValor().getElement1()+";");
-            }
-            else{
-                bw.write(arbol.getValor().getElement0()+"|"+arbol.getValor().getElement1()+";");
-            }
-            guardarArbolPreOrder(bw,arbol.left);
-            guardarArbolPreOrder(bw,arbol.right);
-        }
-    }
-    public static void guardarArbolInOrder(BufferedWriter bw, Node arbol) throws IOException
-    {
-        if(arbol!=null){
-            guardarArbolInOrder(bw,arbol.left);
-            if(arbol.right==null&&arbol.left==null)
-            {
-                bw.write(arbol.getValor().getElement0()+"|"+arbol.getValor().getElement1()+";");
-            }
-            else{
-                bw.write(arbol.getValor().getElement0()+"|"+arbol.getValor().getElement1()+";");
-            }
-            
-            guardarArbolInOrder(bw,arbol.right);
-        }
-    }
-    
-    int search(String arr[], int strt, int end, String value) 
-    { 
-        int i; 
-        for (i = strt; i <= end; i++) { 
-            if (arr[i].equals(value)) 
-                return i; 
-        } 
-        return i; 
     } 
-    
-    Node buildTree(String pre[], String in[], int inStrt, int inEnd) 
-    { 
-        
-        int element0= 0;
-        String element1= "nada";
-        if (inStrt > inEnd) 
-            return null; 
-
-        /* Pick current node from Preorder traversal using preIndex 
-           and increment preIndex */
-        String a= pre[preIndex++];
-        
-        for(int i =0;i<a.length();i++)
-        {
-            if(a.charAt(i)=='|')
-            {
-                element0= Integer.parseInt(a.substring(0,i));
-                element1= a.substring(i+1);
-                break;
-                }
-            }
-        Node tNode = new Node(new Pairs<Integer,String>(element0,element1)); 
-  
-        /* If this node has no children then return */
-        if (inStrt == inEnd) 
-            return tNode; 
-            
-
-        /* Else find the index of this node in Inorder traversal */
-        int inIndex = search(in, inStrt, inEnd, a); 
-            
-        /* Using index in Inorder traversal, construct left and 
-           right subtress */
-        tNode.left = buildTree(in, pre, inStrt, inIndex - 1); 
-        tNode.right = buildTree(in, pre, inIndex + 1, inEnd);
-            
-  
-        return tNode;
-           
-    } 
-    static Set<Node> set = new HashSet<>(); 
-    static Stack<Node> stack = new Stack<>(); 
-  
-    // Function to build tree using given traversal 
-    public Node buildTree(String[] preorder, String[] inorder) 
-    { 
-  
-        Node root = null; 
-        int element0 =0;
-        String element1="";
-        for (int pre = 0, in = 0; pre < preorder.length;) { 
-  
-            Node node = null; 
-            do { 
-                for(int i =0;i<preorder[pre].length();i++)
-                {
-                    if(preorder[pre].charAt(i)=='|')
-                    {
-                        element0= Integer.parseInt(preorder[pre].substring(0,i));
-                        element1= preorder[pre].substring(i+1);
-                        break;
-                    }
-                }
-                node = new Node(new Pairs<Integer,String>(element0,element1)); 
-                if (root == null) { 
-                    root = node; 
-                } 
-                if (!stack.isEmpty()) { 
-                    if (set.contains(stack.peek())) { 
-                        set.remove(stack.peek()); 
-                        stack.pop().right = node; 
-                    } 
-                    else { 
-                        stack.peek().left = node; 
-                    } 
-                } 
-                stack.push(node); 
-            } while (preorder[pre++] != inorder[in] && pre < preorder.length); 
-  
-            node = null; 
-
-            while (!stack.isEmpty() && in < inorder.length &&  
-                    stack.peek().getValor().getElement0().toString()+"|"+stack.peek().getValor().getElement1() == inorder[in]) { 
-                node = stack.pop(); 
-                in++; 
-            } 
-  
-            if (node != null) { 
-                set.add(node); 
-                stack.push(node); 
-            } 
-        } 
-  
-        return root; 
-    } 
-  
 }
